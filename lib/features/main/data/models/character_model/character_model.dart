@@ -31,7 +31,6 @@ extension CharacterModelX on CharacterModel {
       species: species,
       gender: gender,
       image: image,
-      created: created,
       type: type,
     );
   }

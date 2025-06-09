@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/router/app_router.dart';
 import 'core/service_locator/service_locator.dart';
+import 'features/favorites/presentation/bloc/favorite_characters_bloc/favorite_characters_bloc.dart';
 import 'features/main/presentation/bloc/characters_bloc/characters_bloc.dart';
 
 Future<void> main() async {
@@ -15,6 +16,9 @@ Future<void> main() async {
       providers: [
         BlocProvider(
           create: (_) => getIt<CharactersBloc>()..initialize(),
+        ),
+        BlocProvider(
+          create: (_) => getIt<FavoriteCharactersBloc>()..getFavorites(),
         ),
       ],
       child: const MyApp(),
