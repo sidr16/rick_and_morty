@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../../../../core/widgets/snackbar/snackbar_manager.dart';
 import '../../../domain/use_cases/add_character_to_favorites_use_case.dart';
 import '../../../domain/use_cases/clean_favorite_characters_use_case.dart';
 import '../../../domain/use_cases/get_favorite_characters_use_case.dart';
@@ -47,6 +48,10 @@ class FavoriteCharactersBloc
   ) {
     _addCharacterToFavoritesUseCase.execute(event.character);
     final updated = _getFavoriteCharactersUseCase.execute();
+    SnackbarManager.show(
+      message: 'Character added to favorites',
+      type: SnackbarType.success,
+    );
     emit(FavoriteCharactersDataState(updated));
   }
 
@@ -56,6 +61,9 @@ class FavoriteCharactersBloc
   ) {
     _removeCharacterFromFavoritesUseCase.execute(event.id);
     final updated = _getFavoriteCharactersUseCase.execute();
+    SnackbarManager.show(
+      message: 'Character removed from favorites',
+    );
     emit(FavoriteCharactersDataState(updated));
   }
 

@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:injectable/injectable.dart';
 
@@ -6,10 +7,13 @@ import '../../features/main/presentation/pages/home_page/home_page.dart';
 import '../../features/main/presentation/pages/navigation_page/navigation_page.dart';
 import 'app_router_endpoints.dart';
 
+final rootNavigatorKey = GlobalKey<NavigatorState>();
+
 @lazySingleton
 class AppRouter {
   late final router = GoRouter(
     routes: routes,
+    navigatorKey: rootNavigatorKey,
     initialLocation: AppRouterEndpoints.home.path,
   );
 
