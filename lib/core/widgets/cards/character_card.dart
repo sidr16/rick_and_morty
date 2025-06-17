@@ -110,21 +110,30 @@ class _FavoriteButton extends StatefulWidget {
 
 class _FavoriteButtonState extends State<_FavoriteButton>
     with SingleTickerProviderStateMixin {
-  late final _animationController = AnimationController(
-    vsync: this,
-    duration: Durations.short4,
-    value: 1,
-  );
+  late final AnimationController _animationController;
 
-  late final Animation<double> _animationTween = Tween<double>(
-    begin: 1.3,
-    end: 1,
-  ).animate(
-    CurvedAnimation(
-      curve: Curves.easeOut,
-      parent: _animationController,
-    ),
-  );
+  late final Animation<double> _animationTween;
+
+  @override
+  void initState() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Durations.short4,
+      value: 1,
+    );
+
+    _animationTween = Tween<double>(
+      begin: 1.3,
+      end: 1,
+    ).animate(
+      CurvedAnimation(
+        curve: Curves.easeOut,
+        parent: _animationController,
+      ),
+    );
+
+    super.initState();
+  }
 
   @override
   void dispose() {

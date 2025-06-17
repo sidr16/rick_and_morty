@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
 
 import '../../../../../core/bloc/pagination_bloc/pagination_extension.dart';
-import '../../../../../core/widgets/cards/character_card.dart';
-import '../../../domain/entities/character_entity/character_entity.dart';
+import '../../../../../core/widgets/list/character_list.dart';
 import '../../bloc/characters_bloc/characters_bloc.dart';
 
 class HomePage extends StatelessWidget {
@@ -21,57 +19,35 @@ class HomePage extends StatelessWidget {
       body: BlocBuilder<CharactersBloc, CharactersState>(
         builder: (context, state) {
           return state.when(
-            loading: CircularProgressIndicator.new,
+            loading: () {
+              return const CharacterList(
+                showShimmer: true,
+                characters: [],
+              );
+            },
             data: (data) {
-              return _BuildCharactersList(
+              return CharacterList(
                 characters: data,
                 onItemBuildIndex: notifier.onLoadItemAtIndex,
               );
             },
             loadingWithData: (data) {
-              return _BuildCharactersList(
+              return CharacterList(
                 characters: data,
+                showShimmer: true,
               );
             },
             error: (error) {
               return Text(error.toString());
             },
             errorWithData: (data, error) {
-              return _BuildCharactersList(
+              return CharacterList(
                 characters: data,
               );
             },
           );
         },
       ),
-    );
-  }
-}
-
-class _BuildCharactersList extends StatelessWidget {
-  const _BuildCharactersList({
-    required this.characters,
-    this.onItemBuildIndex,
-  });
-
-  final List<CharacterEntity> characters;
-  final void Function(int index)? onItemBuildIndex;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.separated(
-      padding: const EdgeInsets.all(16),
-      itemBuilder: (_, index) {
-        onItemBuildIndex?.call(index);
-
-        return CharacterCard(
-          character: characters[index],
-        );
-      },
-      separatorBuilder: (_, _) {
-        return const Gap(16);
-      },
-      itemCount: characters.length,
     );
   }
 }

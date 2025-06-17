@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 
 import '../../../../../core/utils/extensions/context_extension.dart';
-import '../../../../../core/widgets/cards/character_card.dart';
+import '../../../../../core/widgets/list/character_list.dart';
 import '../../../../main/domain/entities/character_entity/character_entity.dart';
 import '../../bloc/favorite_characters_bloc/favorite_characters_bloc.dart';
 import '../../bloc/favorite_characters_bloc/favorite_characters_state.dart';
@@ -61,17 +61,8 @@ class _BuildCharactersList extends StatelessWidget {
       );
     }
 
-    return ListView.separated(
-      padding: const EdgeInsets.all(16),
-      itemBuilder: (_, index) {
-        return CharacterCard(
-          character: characters[index],
-        );
-      },
-      separatorBuilder: (_, _) {
-        return const Gap(16);
-      },
-      itemCount: characters.length,
+    return CharacterList(
+      characters: characters,
     );
   }
 }
