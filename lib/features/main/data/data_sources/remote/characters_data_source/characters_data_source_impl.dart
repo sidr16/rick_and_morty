@@ -22,8 +22,6 @@ class CharactersDataSourceImpl implements CharactersDataSource {
         queryParameters: {'page': page},
       );
 
-      await Future.delayed(const Duration(seconds: 3), () {});
-
       return PaginationResult.fromJson(
         res.data!,
         CharacterModel.fromJson,
