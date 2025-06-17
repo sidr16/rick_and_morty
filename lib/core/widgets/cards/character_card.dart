@@ -99,10 +99,38 @@ class CharacterCard extends StatelessWidget {
   }
 }
 
-class _FavoriteButton extends StatelessWidget {
+class _FavoriteButton extends StatefulWidget {
   const _FavoriteButton({required this.character});
 
   final CharacterEntity character;
+
+  @override
+  State<_FavoriteButton> createState() => _FavoriteButtonState();
+}
+
+class _FavoriteButtonState extends State<_FavoriteButton>
+    with SingleTickerProviderStateMixin {
+  late final _animationController = AnimationController(
+    vsync: this,
+    duration: Durations.short4,
+    value: 1,
+  );
+
+  late final Animation<double> _animationTween = Tween<double>(
+    begin: 1.3,
+    end: 1,
+  ).animate(
+    CurvedAnimation(
+      curve: Curves.easeOut,
+      parent: _animationController,
+    ),
+  );
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,29 +143,34 @@ class _FavoriteButton extends StatelessWidget {
           final FavoriteCharactersDataState data => Builder(
             builder: (context) {
               final isFavorite = data.characters.contains(
-                character,
+                widget.character,
               );
 
               return Align(
                 alignment: Alignment.bottomRight,
                 child: IconButton.filledTonal(
-                  onPressed: () {
+                  onPressed: () async {
                     if (isFavorite) {
                       notifier.add(
                         FavoriteCharactersRemoveEvent(
-                          character.id,
+                          widget.character.id,
                         ),
                       );
                     } else {
                       notifier.add(
-                        FavoriteCharactersAddEvent(character),
+                        FavoriteCharactersAddEvent(widget.character),
                       );
                     }
+                    await _animationController.reverse();
+                    await _animationController.forward();
                   },
-                  icon: Icon(
-                    isFavorite
-                        ? Icons.star_rounded
-                        : Icons.star_outline_rounded,
+                  icon: ScaleTransition(
+                    scale: _animationTween,
+                    child: Icon(
+                      isFavorite
+                          ? Icons.star_rounded
+                          : Icons.star_outline_rounded,
+                    ),
                   ),
                 ),
               );
