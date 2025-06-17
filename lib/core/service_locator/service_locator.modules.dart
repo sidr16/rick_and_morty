@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:http_cache_hive_store/http_cache_hive_store.dart';
 import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -19,15 +20,26 @@ abstract class ServiceLocatorModules {
     return Hive.openBox<FavoriteCharacterModel>('favoritesBox');
   }
 
-  @lazySingleton
-  Dio dioClient() =>
-      Dio(BaseOptions(baseUrl: Endpoints.baseUrl))
-        ..interceptors.add(
-          DioCacheInterceptor(
-            options: CacheOptions(
-              store: MemCacheStore(),
-              maxStale: const Duration(minutes: 15),
-            ),
-          ),
-        );
+  @preResolve
+  Future<Dio> dioClient() async {
+    final directory = await getTemporaryDirectory();
+
+    final cacheOptions = CacheOptions(
+      store: HiveCacheStore(
+        directory.path,
+      ),
+      hitCacheOnNetworkFailure: true,
+    );
+
+    final baseOptions = BaseOptions(
+      baseUrl: Endpoints.baseUrl,
+    );
+
+    return Dio(baseOptions)
+      ..interceptors.add(
+        DioCacheInterceptor(
+          options: cacheOptions,
+        ),
+      );
+  }
 }

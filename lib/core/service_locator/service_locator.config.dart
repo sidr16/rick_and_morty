@@ -64,7 +64,10 @@ extension GetItInjectableX on _i174.GetIt {
       () => serviceLocatorModules.cartBox(),
       preResolve: true,
     );
-    gh.lazySingleton<_i361.Dio>(() => serviceLocatorModules.dioClient());
+    await gh.factoryAsync<_i361.Dio>(
+      () => serviceLocatorModules.dioClient(),
+      preResolve: true,
+    );
     gh.lazySingleton<_i1004.AppRouter>(() => _i1004.AppRouter());
     gh.singleton<_i1023.FavoriteCharacterDataSource>(
       () => _i750.FavoriteCharacterDataSourceImpl(
